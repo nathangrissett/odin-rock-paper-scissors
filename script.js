@@ -2,6 +2,8 @@ let computerChoice;
 let humanChoice;
 let randomNumber;
 
+const currentScore = document.querySelector("#currentScore");
+
 function getComputerChoice() {
     randomNumber = Math.floor(Math.random() * 3);
     if (randomNumber == 0) {
@@ -16,19 +18,6 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    humanChoice = prompt("rock, paper, or scissors?", "").toLowerCase();
-        if (humanChoice == "rock") {
-            console.log("You: rock");
-        } else if (humanChoice == "paper") {
-            console.log("You: paper");
-        } else if (humanChoice == "scissors") {
-            console.log("You: scissors");
-        } else {
-            console.log("You: invalid response");
-        }
-}
-
 let humanScore = 0;
 let computerScore = 0;
 let roundCount = 0;
@@ -37,41 +26,61 @@ function playRound() {
     if (((humanChoice == "rock") && (randomNumber == 0))
         || ((humanChoice == "paper") && (randomNumber == 1))
         || ((humanChoice == "scissors") && (randomNumber > 1))) {
-            console.log("Draw!");
+            currentScore.textContent = " Draw!";
     } else if (((humanChoice == "rock") && (randomNumber > 1))
         || ((humanChoice == "paper") && (randomNumber == 0))
         || ((humanChoice == "scissors") && (randomNumber == 1))) {
             console.log(`You win! ${humanChoice} beats ${computerChoice}!`)
             humanScore++;
-            console.log(`You: ${humanScore}, CPU: ${computerScore}`);
+            currentScore.textContent = `You: ${humanScore}, CPU: ${computerScore}`;
     } else {
         console.log(`You lose! ${computerChoice} beats ${humanChoice}!`)
         computerScore++;
-        console.log(`You: ${humanScore}, CPU: ${computerScore}`)
+        currentScore.textContent = `You: ${humanScore}, CPU: ${computerScore}`;
     }
     roundCount++;
+    finalResult();
 }
 
 function playGame() {
-    if (roundCount < 5) {
-        getHumanChoice();
-        getComputerChoice();
-        playRound();
-    } else {
-        console.log("Game Over.");
-        if (humanScore > computerScore) {
-            console.log("End result: You win!");
-        } else if (computerScore > humanScore) {
-            console.log("End result: You lose!");
-        } else {
-            console.log("End result: Draw");
-        }
+    getComputerChoice();
+    playRound();
+}
+
+function finalResult() {
+    if (humanScore === 5) {
+        currentScore.textContent += " You win!"
+    }
+    if (computerScore === 5) {
+        currentScore.textContent += " You lose!"
     }
 }
 
-playGame();
-playGame();
-playGame();
-playGame();
-playGame();
-playGame();
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+
+rps.addEventListener("click", (e) => {
+    let target = e.target;
+
+    switch (target.id) {
+        case 'rock':
+            if ((humanScore < 5) && (computerScore < 5)) {
+                humanChoice = "rock";
+                playGame();
+                }
+            break;
+        case 'paper':
+            if ((humanScore < 5) && (computerScore < 5)) {
+                humanChoice="paper";
+                playGame();
+                }
+            break;
+        case 'scissors':
+            if ((humanScore < 5) && (computerScore < 5)) {
+                humanChoice="scissors";
+                playGame();
+                }
+            break;
+    }
+});
